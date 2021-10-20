@@ -5,7 +5,10 @@ import {
   PersisterOperationsResult,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
-import { HACKERONE_SERVICE_ENTITY_TYPE } from "./constants";
+import {
+  HACKERONE_CLIENT_404_ERROR,
+  HACKERONE_SERVICE_ENTITY_TYPE,
+} from "./constants";
 import {
   Report,
   toFindingEntity,
@@ -16,6 +19,7 @@ import {
   toWeaknessRelationship,
 } from "./converters";
 import { createOperationsFromFindings } from "./createOperations";
+import logger from "./logger";
 import {
   FindingEntity,
   FindingVulnerabilityRelationship,
@@ -24,7 +28,6 @@ import {
   ServiceEntity,
   ServiceFindingRelationship,
 } from "./types";
-import logger from "./logger";
 
 export default async function synchronize(
   context: IntegrationExecutionContext,
@@ -50,19 +53,28 @@ export default async function synchronize(
   const findingWeaknessRelationships: FindingWeaknessRelationship[] = [];
   const serviceEntities: ServiceEntity[] = [service];
   const findingEntities: FindingEntity[] = [];
-  let reports: Report[][] = [];
 
+  let reports: Report[][] = [];
   try {
     reports = await Hackerone.queryReports(config.hackeroneProgramHandle);
   } catch (err) {
-    // See the comment at src/logger.ts:15 for why we have to check the message this way
-    if (err.message.includes("StatusCodeError: 404")) {
+    // TODO/HACK: Underlying library not re-throwing status codes correctly so
+    // this instead does a substring match to detect if a 404 (e.g., no direct access to err.errors[])
+    if (err.message.includes(HACKERONE_CLIENT_404_ERROR)) {
       logger.warn(
         { hackeroneProgramHandle: config.hackeroneProgramHandle },
         "No reports found",
       );
     } else {
-      logger.error({ err }, "There was a problem querying for reports");
+      logger.error(
+        {
+          err,
+          handle: config.hackeroneProgramHandle,
+          category: service.category,
+          displayName: service.displayName,
+        },
+        "There was a problem querying reports",
+      );
       throw err;
     }
   }

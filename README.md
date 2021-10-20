@@ -83,7 +83,7 @@ Restart the graph server to clear the data when you want to run the integration
 with no existing data.
 
 ```sh
-yarn stop:graph && JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start:graph
+yarn stop:graph && JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start:graph && JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start
 ```
 
 ### Environment Variables
