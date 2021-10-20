@@ -11,6 +11,7 @@ module.exports = {
     "!src/index.ts",
     "!src/executionHandler.ts",
     "!src/hackerone-client.d.ts",
+    "!src/logger.ts",
   ],
   moduleFileExtensions: [...defaults.moduleFileExtensions, "ts"],
   testEnvironment: "node",

@@ -24,7 +24,6 @@ import {
   ServiceEntity,
   ServiceFindingRelationship,
 } from "./types";
-
 import logger from "./logger";
 
 export default async function synchronize(
@@ -54,7 +53,7 @@ export default async function synchronize(
   let reports: Report[][] = [];
 
   try {
-    reports = await Hackerone.queryReports(config.hackeroneProgramHandle + 1);
+    reports = await Hackerone.queryReports(config.hackeroneProgramHandle);
   } catch (err) {
     // See the comment at src/logger.ts:15 for why we have to check the message this way
     if (err.message.includes("StatusCodeError: 404")) {
