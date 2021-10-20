@@ -48,6 +48,11 @@ export default async function synchronize(
     category: "bug-bounty",
     handle: config.hackeroneProgramHandle,
   };
+  const programInfo = {
+    displayName: service.displayName,
+    handle: config.hackeroneProgramHandle,
+    category: service.category,
+  };
   const serviceFindingRelationships: ServiceFindingRelationship[] = [];
   const findingVulnerabilityRelationships: FindingVulnerabilityRelationship[] = [];
   const findingWeaknessRelationships: FindingWeaknessRelationship[] = [];
@@ -58,26 +63,21 @@ export default async function synchronize(
   try {
     reports = await Hackerone.queryReports(config.hackeroneProgramHandle);
   } catch (err) {
-    // TODO/HACK: Underlying library not re-throwing status codes correctly so
-    // this instead does a substring match to detect if a 404 (e.g., no direct access to err.errors[])
     if (err.message.includes(HACKERONE_CLIENT_404_ERROR)) {
-      logger.warn(
-        { hackeroneProgramHandle: config.hackeroneProgramHandle },
-        "No reports found",
-      );
+      logger.warn(programInfo, "No reports found");
     } else {
       logger.error(
         {
           err,
-          handle: config.hackeroneProgramHandle,
-          category: service.category,
-          displayName: service.displayName,
+          programInfo,
         },
         "There was a problem querying reports",
       );
       throw err;
     }
   }
+
+  logger.info(programInfo, "Found reports");
 
   for (const reportCollection of reports) {
     for (const report of reportCollection) {
