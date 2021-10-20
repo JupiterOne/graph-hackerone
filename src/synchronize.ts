@@ -7,6 +7,7 @@ import {
 
 import { HACKERONE_SERVICE_ENTITY_TYPE } from "./constants";
 import {
+  Report,
   toFindingEntity,
   toServiceFindingRelationship,
   toVulnerabilityEntity,
@@ -24,6 +25,8 @@ import {
   ServiceFindingRelationship,
 } from "./types";
 
+import logger from "./logger";
+
 export default async function synchronize(
   context: IntegrationExecutionContext,
 ): Promise<PersisterOperationsResult> {
@@ -39,9 +42,7 @@ export default async function synchronize(
     _key: `hackerone:${config.hackeroneProgramHandle}`,
     _type: HACKERONE_SERVICE_ENTITY_TYPE,
     _class: ["Service", "Assessment"],
-    displayName: `HackerOne Bounty Program for ${
-      config.hackeroneProgramHandle
-    }`,
+    displayName: `HackerOne Bounty Program for ${config.hackeroneProgramHandle}`,
     category: "bug-bounty",
     handle: config.hackeroneProgramHandle,
   };
@@ -50,8 +51,22 @@ export default async function synchronize(
   const findingWeaknessRelationships: FindingWeaknessRelationship[] = [];
   const serviceEntities: ServiceEntity[] = [service];
   const findingEntities: FindingEntity[] = [];
+  let reports: Report[][] = [];
 
-  const reports = await Hackerone.queryReports(config.hackeroneProgramHandle);
+  try {
+    reports = await Hackerone.queryReports(config.hackeroneProgramHandle + 1);
+  } catch (err) {
+    // See the comment at src/logger.ts:15 for why we have to check the message this way
+    if (err.message.includes("StatusCodeError: 404")) {
+      logger.warn(
+        { hackeroneProgramHandle: config.hackeroneProgramHandle },
+        "No reports found",
+      );
+    } else {
+      logger.error({ err }, "There was a problem querying for reports");
+      throw err;
+    }
+  }
 
   for (const reportCollection of reports) {
     for (const report of reportCollection) {
