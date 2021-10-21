@@ -1,71 +1,25 @@
-import {
-  EntityFromIntegration,
-  MappedRelationshipFromIntegration,
-  RelationshipFromIntegration,
-} from "@jupiterone/jupiter-managed-integration-sdk";
+// Providers often supply types with their API libraries.
 
-export interface ServiceEntity extends EntityFromIntegration {
-  category: string;
-  handle: string;
-}
-
-export interface FindingEntity extends EntityFromIntegration {
-  state: string;
-  details: string;
-  title: string;
+export interface AcmeUser {
   id: string;
-  type: string;
-  open: boolean;
-  createdOn?: number;
-  disclosedOn?: number;
-  firstActivityAt?: number;
-  lastActivityAt?: number;
-  updatedOn?: number;
-  triagedOn?: number;
-  closedOn?: number;
-  severity?: string;
-  score?: number | null;
-  numericSeverity?: number | null;
-  scope?: string | null;
-  targets?: string | string[] | null;
-  vector?: string;
-  complexity?: string;
-  confidentiality?: string;
-  integrity?: string;
-  availability?: string;
-  privileges?: string;
-  interaction?: string;
-  bountyAmount?: number;
-  bountyBonusAmount?: number;
-  bountyAwardedOn?: number;
-  totalAmountAwarded?: number;
-  hackerAlias: string;
-  hackerProfilePic?: string;
-}
-
-export interface VulnerabilityEntity extends EntityFromIntegration {
-  name?: string;
-  description?: string;
-}
-
-export interface WeaknessEntity extends EntityFromIntegration {
   name: string;
-  description: string;
 }
 
-export interface AttackEntity extends EntityFromIntegration {
+export interface AcmeGroup {
+  id: string;
   name: string;
-  description: string;
+  users?: Pick<AcmeUser, 'id'>[];
 }
 
-export type ServiceFindingRelationship = RelationshipFromIntegration;
+// Those can be useful to a degree, but often they're just full of optional
+// values. Understanding the response data may be more reliably accomplished by
+// reviewing the API response recordings produced by testing the wrapper client
+// (./client.ts). However, when there are no types provided, it is necessary to define
+// opaque types for each resource, to communicate the records that are expected
+// to come from an endpoint and are provided to iterating functions.
 
-export type FindingVulnerabilityRelationship = MappedRelationshipFromIntegration;
-
-export type FindingWeaknessRelationship = MappedRelationshipFromIntegration;
-
-export interface HackerOneIntegrationInstanceConfig {
-  hackeroneApiKey: string;
-  hackeroneApiKeyName: string;
-  hackeroneProgramHandle: string;
-}
+/*
+import { Opaque } from 'type-fest';
+export type AcmeUser = Opaque<any, 'AcmeUser'>;
+export type AcmeGroup = Opaque<any, 'AcmeGroup'>;
+*/
