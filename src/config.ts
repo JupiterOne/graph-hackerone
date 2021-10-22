@@ -59,4 +59,7 @@ export async function validateInvocation(
 
   const apiClient = createAPIClient(config);
   await apiClient.verifyAuthentication();
+  await apiClient.iterateReports(() => {
+    return; /* TODO */
+  }, {});
 }

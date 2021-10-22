@@ -1,7 +1,7 @@
 {
   "name": "@jupiterone/graph-hackerone",
   "version": "0.5.0",
-  "description":  "A JupiterOne managed integration for https://www.hackerone.com/",
+  "description": "A JupiterOne managed integration for https://www.hackerone.com/",
   "license": "MPL-2.0",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -32,6 +32,10 @@
   "devDependencies": {
     "@jupiterone/integration-sdk-core": "^6.19.0",
     "@jupiterone/integration-sdk-dev-tools": "^6.19.0",
-    "@jupiterone/integration-sdk-testing": "^6.19.0"
+    "@jupiterone/integration-sdk-testing": "^6.19.0",
+    "@types/axios": "^0.14.0"
+  },
+  "dependencies": {
+    "axios": "^0.23.0"
   }
 }

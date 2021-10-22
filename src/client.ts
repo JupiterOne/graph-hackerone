@@ -1,9 +1,10 @@
-import http from 'http';
+import axios, { AxiosInstance } from 'axios';
 
 import { IntegrationProviderAuthenticationError } from '@jupiterone/integration-sdk-core';
 
 import { IntegrationConfig } from './config';
-import { AcmeUser, AcmeGroup } from './types';
+import { AcmeUser, AcmeGroup, Report, QueryResult } from './types';
+// import * as http from "http";
 
 export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
 
@@ -16,41 +17,116 @@ export type ResourceIteratee<T> = (each: T) => Promise<void> | void;
  * resources.
  */
 export class APIClient {
-  constructor(readonly config: IntegrationConfig) {}
+  private readonly hostname: string = 'https://api.hackerone.com:443/v1/';
+  private readonly axiosInstance: AxiosInstance;
+
+  constructor(readonly config: IntegrationConfig) {
+    this.axiosInstance = axios.create({
+      baseURL: this.hostname,
+      auth: {
+        username: this.config.hackeroneApiKeyName,
+        password: this.config.hackeroneApiKey,
+      },
+      headers: { 'X-Custom-Header': 'foobar' },
+    });
+  }
 
   public async verifyAuthentication(): Promise<void> {
     // TODO make the most light-weight request possible to validate
     // authentication works with the provided credentials, throw an err if
     // authentication fails
-    const request = new Promise<void>((resolve, reject) => {
-      http.get(
-        {
-          hostname: 'localhost',
-          port: 443,
-          path: '/api/v1/some/endpoint?limit=1',
-          agent: false,
-          timeout: 10,
-        },
-        (res) => {
-          if (res.statusCode !== 200) {
-            reject(new Error('Provider authentication failed'));
-          } else {
-            resolve();
-          }
-        },
-      );
-    });
+    return Promise.resolve();
 
+    // const request = new Promise<void>((resolve, reject) => {
+    //   http.get(
+    //     {
+    //       hostname: 'localhost',
+    //       port: 443,
+    //       path: '/api/v1/some/endpoint?limit=1',
+    //       agent: false,
+    //       timeout: 10,
+    //     },
+    //     (res) => {
+    //       if (res.statusCode !== 200) {
+    //         reject(new Error('Provider authentication failed'));
+    //       } else {
+    //         resolve();
+    //       }
+    //     },
+    //   );
+    // });
+    //
+    // try {
+    //   await request;
+    // } catch (err) {
+    //   throw new IntegrationProviderAuthenticationError({
+    //     cause: err,
+    //     endpoint: 'https://localhost/api/v1/some/endpoint?limit=1',
+    //     status: err.status,
+    //     statusText: err.statusText,
+    //   });
+    // }
+  }
+
+  public async queryReports(
+    additionalFilters,
+    path,
+  ): Promise<{ nextLink: string; reports: Report[] }> {
     try {
-      await request;
+      const { data: body } = await this.axiosInstance.get<null, QueryResult>(
+        path,
+      );
+      const response = { reports: body.data, nextLink: body.links.next || '' };
+      console.log({ ...response }, 'queryReports: Sending response with');
+      return { reports: body.data, nextLink: body.links.next || '' };
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,
-        endpoint: 'https://localhost/api/v1/some/endpoint?limit=1',
+        endpoint: this.hostname + path,
         status: err.status,
         statusText: err.statusText,
       });
     }
+  }
+
+  /**
+   * Iterates each user resource in the provider.
+   *
+   * @param iteratee receives each resource to produce entities/relationships
+   * @param additionalFilters
+   */
+  public async iterateReports(
+    iteratee: ResourceIteratee<Report>,
+    additionalFilters = {},
+  ): Promise<void> {
+    let path =
+      'reports?filter[program][]=' + this.config.hackeroneProgramHandle;
+
+    if (additionalFilters) {
+      for (const key in additionalFilters) {
+        const value = additionalFilters[key];
+        path += '&' + key + '=' + value;
+      }
+    }
+
+    let nextPage: boolean = true;
+    while (nextPage) {
+      const { reports, nextLink } = await this.queryReports(
+        additionalFilters,
+        path,
+      );
+      for (const report of reports) {
+        await iteratee(report);
+      }
+
+      if (!nextLink) {
+        nextPage = false;
+      } else {
+        path = nextLink;
+      }
+    }
+
+    console.log('Done iterated');
   }
 
   /**
