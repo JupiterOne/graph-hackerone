@@ -48,7 +48,7 @@ describe("synchronize", () => {
     expect(result).toEqual(persisterOperations);
   });
 
-  test("throws if the error is not a 404", async () => {
+  test("throws on error", async () => {
     mockHackeroneClient.queryReports.mockRejectedValue(
       new Error("Not a 404 error"),
     );
@@ -58,12 +58,13 @@ describe("synchronize", () => {
     );
   });
 
-  test("does not throw if a 404 error is received", async () => {
+  test("throws on 404s with a special message", async () => {
     mockHackeroneClient.queryReports.mockRejectedValue(
       new Error(HACKERONE_CLIENT_404_ERROR),
     );
 
-    const result = await synchronize(executionContext);
-    expect(result).toEqual(persisterOperations);
+    await expect(synchronize(executionContext)).rejects.toThrow(
+      /No reports found using that program \*handle\* /,
+    );
   });
 });
