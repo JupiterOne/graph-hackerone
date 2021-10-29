@@ -47,7 +47,7 @@ the table of contents on docs.jupiterone.io, so it should be the name of the
 provider (E.G. "AWS").
 
 The documentation is pushed to docs.jupiterone.io every time a new version of
-the integration is specified in `package.json`, so make sure it's up to date
+the integration is specified in `package.json`, so make sure it's up-to-date
 every time you release a new version.
 
 ## Development Environment
@@ -59,18 +59,18 @@ provider. Developing an integration involves:
 1.  Fetching provider data and converting it to entities and relationships
 1.  Collecting the existing set of entities and relationships already in the
     graph
-1.  Performing a diff to determine which entites/relationships to
+1.  Performing a diff to determine which entities/relationships to
     create/update/delete
 1.  Delivering create/update/delete operations to the persister to update the
     graph
 
-Run the integration to see what happens. You may use use Node to execute
-directly on your machine (NVM is recommended).
+Run the integration to see what happens. You may use Node to execute directly on
+your machine (NVM is recommended).
 
 1.  Install Docker
-1.  `yarn install`
-1.  `yarn start:graph`
-1.  `yarn start`
+1.  `yarn`
+1.  `JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start:graph`
+1.  `JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start`
 
 Activity is logged to the console indicating the operations produced and
 processed. View raw data in the graph database using
@@ -83,7 +83,7 @@ Restart the graph server to clear the data when you want to run the integration
 with no existing data.
 
 ```sh
-yarn stop:graph && yarn start:graph
+yarn stop:graph && JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start:graph && JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start
 ```
 
 ### Environment Variables
@@ -108,25 +108,25 @@ For example, given this execution script:
 
 ```typescript
 const integrationConfig = {
-  apiToken: process.env.MYPROVIDER_LOCAL_EXECUTION_API_TOKEN,
-};
-
-const invocationArgs = {
-  preSharedPrivateKey: process.env.MYPROVIDER_LOCAL_EXECUTION_PRIVATE_KEY,
+  hackeroneApiKey: process.env.HACKERONE_API_KEY,
+  hackeroneApiKeyName: process.env.HACKERONE_API_KEY_NAME,
+  hackeroneProgramHandle: process.env.HACKERONE_PROGRAM_HANDLE,
 };
 ```
 
-Create a `.env` file (this is `.gitignore`'d):
+Create a `.env` file (this is `.gitignore`'d) from `.env.example` and update
+these values after creating a Hackerone account if you don't have one already:
 
 ```sh
-MYPROVIDER_LOCAL_EXECUTION_API_TOKEN=abc123
-MYPROVIDER_LOCAL_EXECUTION_PRIVATE_KEY='something\nreally\nlong'
+HACKERONE_API_KEY=abc123
+HACKERONE_API_KEY_NAME=apiKeyName
+HACKERONE_PROGRAM_HANDLE=programHandleName
 ```
 
 #### SDK Variables
 
 Environment variables can modify some aspects of the integration SDK behavior.
-These may be added to your `.env` with values to overrided the defaults listed
+These may be added to your `.env` with values to override the defaults listed
 here.
 
 - `GRAPH_DB_ENDPOINT` - `"localhost"`

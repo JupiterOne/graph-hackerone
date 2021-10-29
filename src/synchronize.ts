@@ -5,8 +5,12 @@ import {
   PersisterOperationsResult,
 } from "@jupiterone/jupiter-managed-integration-sdk";
 
-import { HACKERONE_SERVICE_ENTITY_TYPE } from "./constants";
 import {
+  HACKERONE_CLIENT_404_ERROR,
+  HACKERONE_SERVICE_ENTITY_TYPE,
+} from "./constants";
+import {
+  Report,
   toFindingEntity,
   toServiceFindingRelationship,
   toVulnerabilityEntity,
@@ -15,6 +19,7 @@ import {
   toWeaknessRelationship,
 } from "./converters";
 import { createOperationsFromFindings } from "./createOperations";
+import logger from "./logger";
 import {
   FindingEntity,
   FindingVulnerabilityRelationship,
@@ -39,11 +44,14 @@ export default async function synchronize(
     _key: `hackerone:${config.hackeroneProgramHandle}`,
     _type: HACKERONE_SERVICE_ENTITY_TYPE,
     _class: ["Service", "Assessment"],
-    displayName: `HackerOne Bounty Program for ${
-      config.hackeroneProgramHandle
-    }`,
+    displayName: `HackerOne Bounty Program for ${config.hackeroneProgramHandle}`,
     category: "bug-bounty",
     handle: config.hackeroneProgramHandle,
+  };
+  const programInfo = {
+    displayName: service.displayName,
+    handle: config.hackeroneProgramHandle,
+    category: service.category,
   };
   const serviceFindingRelationships: ServiceFindingRelationship[] = [];
   const findingVulnerabilityRelationships: FindingVulnerabilityRelationship[] = [];
@@ -51,7 +59,21 @@ export default async function synchronize(
   const serviceEntities: ServiceEntity[] = [service];
   const findingEntities: FindingEntity[] = [];
 
-  const reports = await Hackerone.queryReports(config.hackeroneProgramHandle);
+  let reports: Report[][] = [];
+  try {
+    reports = await Hackerone.queryReports(config.hackeroneProgramHandle);
+  } catch (err) {
+    let errMsg: string = err.message;
+    if (errMsg.includes(HACKERONE_CLIENT_404_ERROR)) {
+      errMsg =
+        "No reports found using that program *handle* (the program handle is different than the program display name --> verify this value from either the H1 program URL or Edit Page screen)";
+      logger.error(errMsg);
+    }
+
+    throw new Error(errMsg);
+  }
+
+  logger.info(programInfo, "Found reports using program info");
 
   for (const reportCollection of reports) {
     for (const report of reportCollection) {

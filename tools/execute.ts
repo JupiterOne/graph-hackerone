@@ -8,9 +8,7 @@ const integrationConfig = {
   hackeroneProgramHandle: process.env.HACKERONE_PROGRAM_HANDLE,
 };
 
-const invocationArgs = {
-  // providerPrivateKey: process.env.PROVIDER_LOCAL_EXECUTION_PRIVATE_KEY
-};
+const invocationArgs = {};
 
 executeIntegrationLocal(
   integrationConfig,
