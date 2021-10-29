@@ -68,7 +68,7 @@ Run the integration to see what happens. You may use Node to execute directly on
 your machine (NVM is recommended).
 
 1.  Install Docker
-1.  `yarn install`
+1.  `yarn`
 1.  `JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start:graph`
 1.  `JUPITERONE_RUNTIME_ENVIRONMENT="LOCAL" yarn start`
 
@@ -114,7 +114,8 @@ const integrationConfig = {
 };
 ```
 
-Create a `.env` file (this is `.gitignore`'d):
+Create a `.env` file (this is `.gitignore`'d) from `.env.example` and update
+these values after creating a Hackerone account if you don't have one already:
 
 ```sh
 HACKERONE_API_KEY=abc123

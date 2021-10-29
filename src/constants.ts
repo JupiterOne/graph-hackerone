@@ -6,4 +6,4 @@ export const HACKERONE_FINDING_WEAKNESS_RELATIONSHIP_TYPE =
   "hackerone_finding_exploits_weakness";
 export const HACKERONE_FINDING_VULNERABILITY_RELATIONSHIP_TYPE =
   "hackerone_finding_is_vulnerability";
-export const HACKERONE_CLIENT_404_ERROR = "StatusCodeError: 404";
+export const HACKERONE_CLIENT_404_ERROR = "StatusCodeError: 404"; // TODO/HACK: Underlying library not re-throwing status codes correctly so this instead does a substring match to detect if a 404 (e.g., no direct access to err.errors[])
