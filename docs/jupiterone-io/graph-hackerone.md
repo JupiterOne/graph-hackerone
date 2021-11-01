@@ -30,8 +30,8 @@ If you need help with this integration, please contact
 ### In HackerOne
 
 HackerOne provides [detailed instructions on creating an API token][1] within
-your HackerOne account. When selecting the programs and groups you want to add
-this token, choose Admin.
+your HackerOne account. When selecting the programs and groups you want to add,
+choose Admin.
 
 ### In JupiterOne
 
