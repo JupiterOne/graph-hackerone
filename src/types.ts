@@ -1,15 +1,11 @@
-import {
-  EntityFromIntegration,
-  MappedRelationshipFromIntegration,
-  RelationshipFromIntegration,
-} from "@jupiterone/jupiter-managed-integration-sdk";
+import { Entity, Relationship } from '@jupiterone/integration-sdk-core';
 
-export interface ServiceEntity extends EntityFromIntegration {
+export interface ProgramEntity extends Entity {
   category: string;
   handle: string;
 }
 
-export interface FindingEntity extends EntityFromIntegration {
+export interface FindingEntity extends Entity {
   state: string;
   details: string;
   title: string;
@@ -43,29 +39,121 @@ export interface FindingEntity extends EntityFromIntegration {
   hackerProfilePic?: string;
 }
 
-export interface VulnerabilityEntity extends EntityFromIntegration {
+export interface VulnerabilityEntity extends Entity {
   name?: string;
   description?: string;
 }
 
-export interface WeaknessEntity extends EntityFromIntegration {
+export interface WeaknessEntity extends Entity {
   name: string;
   description: string;
 }
 
-export interface AttackEntity extends EntityFromIntegration {
+export interface AttackEntity extends Entity {
   name: string;
   description: string;
 }
 
-export type ServiceFindingRelationship = RelationshipFromIntegration;
+export type ServiceFindingRelationship = Relationship;
 
-export type FindingVulnerabilityRelationship = MappedRelationshipFromIntegration;
+export type FindingVulnerabilityRelationship = Relationship;
 
-export type FindingWeaknessRelationship = MappedRelationshipFromIntegration;
+export type FindingWeaknessRelationship = Relationship;
 
 export interface HackerOneIntegrationInstanceConfig {
   hackeroneApiKey: string;
   hackeroneApiKeyName: string;
   hackeroneProgramHandle: string;
+}
+
+export interface Program {
+  name: string;
+}
+
+export interface Report {
+  id: string;
+  type: string;
+  attributes: ReportAttributes;
+  relationships: ReportRelationships;
+}
+
+export interface ReportAttributes {
+  title: string;
+  vulnerability_information: string;
+  state: string;
+  created_at: Date | null;
+  disclosed_at: Date | null;
+  first_program_activity_at: Date | null;
+  last_activity_at: Date | null;
+  triaged_at: Date | null;
+  closed_at: Date | null;
+  cve_ids?: string[];
+}
+
+export interface ReportRelationships {
+  severity?: Severity;
+  weakness?: Weakness;
+  reporter: Reporter;
+  bounties: Bounties;
+  structured_scope?: StructuredScope;
+}
+
+export interface Severity {
+  data: {
+    attributes: {
+      rating: string;
+      score?: number | null;
+      attack_vector?: string;
+      attack_complexity?: string;
+      privileges_required?: string;
+      user_interaction?: string;
+      scope?: string | null;
+      confidentiality?: string;
+      integrity?: string;
+      availability?: string;
+    };
+  };
+}
+
+export interface Weakness {
+  id: string;
+  type?: string;
+  attributes: {
+    name: string;
+    description: string;
+    external_id?: string;
+    created_at: Date;
+  };
+}
+
+export interface Reporter {
+  data: {
+    attributes: {
+      username: string;
+      name: string;
+      profile_picture: {
+        '260x260': string;
+      };
+    };
+  };
+}
+
+export interface Bounties {
+  data: Bounty[];
+}
+
+export interface Bounty {
+  attributes: {
+    awarded_amount: number;
+    awarded_bonus_amount: number;
+    created_at: Date;
+  };
+}
+
+export interface StructuredScope {
+  data: {
+    attributes: {
+      asset_identifier: string;
+    };
+  };
 }
