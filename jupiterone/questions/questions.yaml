@@ -1,11 +1,12 @@
 ---
 sourceId: managed:hackerone
-integrationDefinitionId: "${integration_definition_id}"
+integrationDefinitionId: '${integration_definition_id}'
 questions:
   - id: integration-question-hackerone-total-rewards-by-hacker
     title: Show me the total bug bounty awarded by hacker.
     description:
-      Returns sum of total awards from each hackerone report grouped by hacker alias
+      Returns sum of total awards from each hackerone report grouped by hacker
+      alias
     queries:
       - query: |
           find
@@ -18,9 +19,12 @@ questions:
       - bug bounty
 
   - id: integration-question-hackerone-report-with-the-most-triaged-complex-and-confidential-vulnerabilities
-    title: Which HackerOne report contains both complex and confidential vulnerabilities that have been triaged?
+    title:
+      Which HackerOne report contains both complex and confidential
+      vulnerabilities that have been triaged?
     description:
-      Returns a HackerOne report that contains the most complex, confidential, and triaged vulnerabilities.
+      Returns a HackerOne report that contains the most complex, confidential,
+      and triaged vulnerabilities.
     queries:
       - query: |
           FIND hackerone_report WITH (open = true AND state ~= "triaged" AND complexity ~= "high" AND confidentiality ~= "high") AS report
