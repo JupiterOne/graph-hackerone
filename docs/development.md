@@ -1,28 +1,32 @@
 # Development
 
-Add details here to give a brief overview of how to work with the provider APIs.
-Please reference any SDKs or API docs used to help build the integration here.
+This integration focuses on HackerOne and is using the HackerOne API for
+requesting resources.
 
-## Prerequisites
+## HackerOne account setup
 
-Supply details about software or tooling (like maybe Docker or Terraform) that
-is needed for development here.
+It is assumed you have admin access to the HackerOne console.
 
-Please supply references to documentation that details how to install those
-dependencies here.
-
-Tools like Node.js and NPM are already covered in the [README](../README.md) so
-don't bother documenting that here.
-
-## Provider account setup
-
-Please provide information about the steps needed to create an account with a
-provider. Images and references to a provider's documentation is very helpful
-for new developers picking up your work.
+1. Go to hackerone.com and login
+2. Navigate to `Organization Settings` by clicking on the top nav.
+3. Next, click `API Tokens` on the left hand side
+4. Click the `Create API token`
+5. Enter an identifier. This will be your `API Key Name`.
+6. Check the program you want to grant access to.
+7. Select `Standard` group permission.
+8. Click `Create API token`.
+9. Copy API Token, store in safe place in accordance with best practices.
+10. Navigate to `Program Settings` via the top header
+11. Take note of the program `Handle` found in the `Information` form.
 
 ## Authentication
 
-Supply details here for information on how to authenticate with a provider so
-that developers have an idea of what's needed to hit APIs. It may be useful to
-provide explanations for each value specified in the
-[`IntegrationInstanceConfigFieldMap`](../src/config.ts).
+Copy the `.env.example` to `.env` file and fill in the variables using the user
+information and API token information generated from instructions above. The
+mapping is as follows:
+
+```txt
+HACKERONE_API_KEY -> the token
+HACKERONE_API_KEY_NAME ->  the token name
+HACKERONE_PROGRAM_HANDLE -> the program handle
+```
