@@ -1,15 +1,31 @@
 ---
-sourceId: managed:template
-integrationDefinitionId: '${integration_definition_id}'
-questions: []
-  # - id: integration-question-template-replace-me
-  #   title: What kinds of questions will this integration support?
-  #   description:
-  #     TODO Every integration should contribute questions! Please be carefule
-  #     to replace this before deploying the integration to JupiterOne.
-  #   queries:
-  #     - name: good
-  #       query: |
-  #         find * with _integrationDefinitionId = '${integration_definition_id}'
-  #   tags:
-  #     - template
+sourceId: managed:hackerone
+integrationDefinitionId: "${integration_definition_id}"
+questions:
+  - id: integration-question-hackerone-total-rewards-by-hacker
+    title: Show me the total bug bounty awarded by hacker.
+    description:
+      Returns sum of total awards from each hackerone report grouped by hacker alias
+    queries:
+      - query: |
+          find
+            hackerone_report with totalAmountAwarded!=0 as report
+          return
+            report.hackerAlias, sum(report.totalAmountAwarded) as totalAward
+          order by totalAward desc
+    tags:
+      - hackerone
+      - bug bounty
+
+  - id: integration-question-hackerone-report-with-the-most-triaged-complex-and-confidential-vulnerabilities
+    title: Which HackerOne report contains both complex and confidential vulnerabilities that have been triaged?
+    description:
+      Returns a HackerOne report that contains the most complex, confidential, and triaged vulnerabilities.
+    queries:
+      - query: |
+          FIND hackerone_report WITH (open = true AND state ~= "triaged" AND complexity ~= "high" AND confidentiality ~= "high") AS report
+          RETURN
+            report.displayName, report.hackerAlias, report.triagedOn,report.hackerProfilePic, report.details
+    tags:
+      - hackerone
+      - reporting
