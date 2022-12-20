@@ -3,7 +3,6 @@ import {
   IntegrationValidationError,
   IntegrationInstanceConfigFieldMap,
   IntegrationInstanceConfig,
-  IntegrationProviderAuthorizationError,
 } from '@jupiterone/integration-sdk-core';
 import { createAPIClient } from './client';
 import { HackerOneIntegrationInstanceConfig } from './types';
@@ -66,11 +65,15 @@ export async function validateInvocation(
   if (!config) {
     throw new IntegrationValidationError('Missing configuration');
   } else if (!config.hackeroneApiKey) {
-    throw new IntegrationValidationError('hackeroneApiKey is required');
+    throw new IntegrationValidationError('Config requires hackeroneApiKey.');
   } else if (!config.hackeroneApiKeyName) {
-    throw new IntegrationValidationError('hackeroneApiKeyName is required');
+    throw new IntegrationValidationError(
+      'Config requires hackeroneApiKeyName.',
+    );
   } else if (!config.hackeroneProgramHandle) {
-    throw new IntegrationValidationError('hackeroneProgramHandle is required');
+    throw new IntegrationValidationError(
+      'Config requires hackeroneProgramHandle.',
+    );
   }
 
   const apiClient = createAPIClient(config);

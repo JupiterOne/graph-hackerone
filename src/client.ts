@@ -22,7 +22,7 @@ export class APIClient {
 
   public async verifyAuthentication(): Promise<void> {
     try {
-      await this.hackeroneClient.verifyAccess();
+      await this.hackeroneClient.getPrograms();
     } catch (err) {
       throw new IntegrationProviderAuthenticationError({
         cause: err,

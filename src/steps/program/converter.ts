@@ -11,11 +11,11 @@ export function createProgramEntity(programHandle: string): Entity {
       assign: {
         _key: `hackerone:${programHandle}`,
         _type: Entities.PROGRAM._type,
-        _class: ['Service', 'Assessment'],
+        _class: Entities.PROGRAM._class,
         name: `HackerOne Bounty Program for ${programHandle}`,
         displayName: `HackerOne Bounty Program for ${programHandle}`,
         summary: `HackerOne Bounty Program for ${programHandle}`,
-        category: ['bug-bounty'],
+        category: 'bug-bounty',
         function: ['other'],
         handle: programHandle,
         internal: false,

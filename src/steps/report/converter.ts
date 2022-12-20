@@ -32,9 +32,9 @@ export function createFindingEntity(report: Report): FindingEntity {
       {};
     details = {
       severity: severity.rating,
-      score: severity.score,
+      score: severity.score ?? 0,
       scope: severity.scope,
-      numericSeverity: severity.score,
+      numericSeverity: severity.score ?? 0,
       vector: severity.attack_vector,
       complexity: severity.attack_complexity,
       confidentiality: severity.confidentiality,
@@ -46,9 +46,9 @@ export function createFindingEntity(report: Report): FindingEntity {
   } else {
     details = {
       severity: '',
-      score: null,
+      score: 0,
       scope: null,
-      numericSeverity: null,
+      numericSeverity: 0,
       vector: '',
       complexity: '',
       confidentiality: '',
@@ -92,12 +92,14 @@ export function createFindingEntity(report: Report): FindingEntity {
     {};
 
   return {
-    _class: 'Finding',
+    _class: Entities.REPORT._class,
     _key: `hackerone-report-${report.id}`,
     _type: Entities.REPORT._type,
     id: report.id,
     type: report.type,
     title: attributes.title,
+    name: attributes.title,
+    category: 'other',
     displayName: attributes.title,
     details: attributes.vulnerability_information,
     state: attributes.state,
@@ -123,7 +125,7 @@ export function createFindingEntity(report: Report): FindingEntity {
       reporter.profile_picture && reporter.profile_picture['260x260'],
     webLink: `https://hackerone.com/bugs?report_id=${report.id}`,
     scope: details.scope,
-    targets: target,
+    targets: [target],
     ...details,
   };
 }
@@ -133,7 +135,7 @@ export function createProgramReportedFindingRelationship(
   finding: FindingEntity,
 ): ServiceFindingRelationship {
   return {
-    _class: 'IDENTIFIED',
+    _class: RelationshipClass.IDENTIFIED,
     _key: `${program._key}|identified|${finding._key}`,
     _type: Relationships.PROGRAM_REPORTED_FINDING._type,
     _fromEntityKey: program._key,
