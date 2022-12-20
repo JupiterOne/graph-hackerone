@@ -11,7 +11,6 @@ and this project adheres to
 ### Changed
 
 - Complete overhaul to use new SDK patterns.
--
 
 ## 0.4.15 - 2021-10-29
 
