@@ -7,3 +7,15 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+### Changed
+
+- Complete overhaul to use new SDK patterns.
+-
+
+## 0.4.15 - 2021-10-29
+
+### Changed
+
+- Improve messaging to client to clarify errors when incorrect program handle is
+  specified in the config.

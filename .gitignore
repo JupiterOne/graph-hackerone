@@ -1,4 +1,6 @@
 node_modules/
+build/
+coverage/
 dist/
 .j1-integration/
 .j1-integration-cache/
