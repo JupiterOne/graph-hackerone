@@ -1,1 +1,1 @@
-declare module "hackerone-client";
+declare module 'hackerone-client';
