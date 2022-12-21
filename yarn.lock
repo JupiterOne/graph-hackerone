@@ -3170,7 +3170,7 @@ graceful-fs@^4.2.9:
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.9.tgz#041b05df45755e587a24942279b9d113146e1c96"
   integrity sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==
 
-hackerone-client@^1.1.0:
+hackerone-client@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/hackerone-client/-/hackerone-client-1.0.7.tgz#07978b1fde1f09e861325d304ae11efd27722f2b"
   integrity sha512-cF5IAAtiuMQljRKjlEBD2iVZyWgJpJYRjV7wtK4HBs7LJESh+jWvVwJIy9DfrAG8rIttztbhEHYzRwgKWov4Cw==
