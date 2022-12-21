@@ -40,9 +40,6 @@ If you need help with this integration, contact
 
 ### In JupiterOne
 
-TODO: List specific actions that the user must take in JupiterOne. Many of the
-following steps will be reusable; take care to be sure they remain accurate.
-
 1. From the top navigation of the J1 Search homepage, select **Integrations**.
 2. Scroll down to **HackerOne** and click it.
 3. Click **Add Configuration** and configure the following settings:
@@ -59,10 +56,6 @@ following steps will be reusable; take care to be sure they remain accurate.
 4. Click **Create Configuration** after you have entered all the values.
 
 ## How to Uninstall
-
-TODO: List specific actions that must be taken to uninstall the integration.
-Many of the following steps will be reusable; take care to be sure they remain
-accurate.
 
 1. From the top navigation of the J1 Search homepage, select **Integrations**.
 2. Scroll down to **HackerOne** and click it.
