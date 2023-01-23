@@ -1,5 +1,6 @@
 import {
   createMappedRelationship,
+  Entity,
   parseTimePropertyValue,
   Relationship,
   RelationshipClass,
@@ -11,7 +12,6 @@ import {
   AttackEntity,
   FindingEntity,
   FindingWeaknessRelationship,
-  ProgramEntity,
   Report,
   ReportAttributes,
   ReportRelationships,
@@ -24,6 +24,7 @@ import {
 export function createFindingEntity(report: Report): FindingEntity {
   const attributes: ReportAttributes = report.attributes;
   const relationships: ReportRelationships = report.relationships;
+  const structuredScopeId = report.relationships.structured_scope?.data.id;
 
   let details;
   if (relationships.severity) {
@@ -126,13 +127,14 @@ export function createFindingEntity(report: Report): FindingEntity {
     webLink: `https://hackerone.com/bugs?report_id=${report.id}`,
     scope: details.scope,
     targets: [target],
+    structuredScopeId,
     ...details,
   };
 }
 
 export function createProgramReportedFindingRelationship(
-  program: ProgramEntity,
-  finding: FindingEntity,
+  program: Entity,
+  finding: Entity,
 ): ServiceFindingRelationship {
   return {
     _class: RelationshipClass.IDENTIFIED,

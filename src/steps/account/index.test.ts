@@ -9,13 +9,13 @@ afterEach(async () => {
   await recording.stop();
 });
 
-test('fetch-program', async () => {
+test('fetch-account', async () => {
   recording = setupProjectRecording({
     directory: __dirname,
-    name: 'fetch-program',
+    name: 'fetch-account',
   });
 
-  const stepConfig = buildStepTestConfigForStep(Steps.PROGRAMS);
+  const stepConfig = buildStepTestConfigForStep(Steps.ACCOUNT);
   const stepResult = await executeStepWithDependencies(stepConfig);
   expect(stepResult).toMatchStepMetadata(stepConfig);
 });
