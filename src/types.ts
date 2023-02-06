@@ -117,13 +117,15 @@ export interface Severity {
 }
 
 export interface Weakness {
-  id: string;
-  type?: string;
-  attributes: {
-    name: string;
-    description: string;
-    external_id?: string;
-    created_at: Date;
+  data: {
+    id: string;
+    type?: string;
+    attributes: {
+      name: string;
+      description: string;
+      external_id: string;
+      created_at: Date;
+    };
   };
 }
 

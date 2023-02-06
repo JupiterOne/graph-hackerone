@@ -10,6 +10,11 @@ and this project adheres to
 
 ### Added
 
+- Added `recommendation`, `reference`, `description`, and `impact` fields to
+  `hackerone_report`
+
+### Added
+
 - The following entities are added:
 
   | Resources     | Entity `_type`            | Entity `_class` |

@@ -33,7 +33,7 @@ export function createFindingEntity(report: Report): FindingEntity {
       {};
     details = {
       severity: severity.rating,
-      score: severity.score ?? 0,
+      score: severity.score,
       scope: severity.scope,
       numericSeverity: severity.score ?? 0,
       vector: severity.attack_vector,
@@ -92,17 +92,60 @@ export function createFindingEntity(report: Report): FindingEntity {
       relationships.reporter.data.attributes) ||
     {};
 
+  let impact;
+  if (attributes.vulnerability_information.includes('## Impact')) {
+    const impactString =
+      attributes.vulnerability_information.split('## Impact');
+    if (impactString.length > 1) {
+      impact = impactString[1].replace(/[\n\r]/g, '');
+    }
+  }
+
+  let remediation;
+  if (attributes.vulnerability_information.includes('# Remediation')) {
+    const remediationString =
+      attributes.vulnerability_information.split('# Remediation');
+    remediation = remediationString[1].replace(/[\n\r]/g, '').split('#');
+    if (remediation.length > 1) {
+      remediation = remediation[0].replace(/[\n\r]/g, '');
+    }
+  }
+
+  let reference;
+  if (relationships.weakness?.data.attributes.external_id.startsWith('cwe-')) {
+    reference = `https://cwe.mitre.org/data/definitions/${
+      relationships.weakness?.data.attributes.external_id.split('-')[1]
+    }.html`;
+  } else if (
+    relationships.weakness?.data.attributes.external_id.startsWith('cve-')
+  ) {
+    reference = `https://nvd.nist.gov/vuln/detail/${
+      relationships.weakness?.data.attributes.external_id.split('-')[1]
+    }`;
+  }
+
+  let isCve, isCwe;
+  if (relationships.weakness?.data.attributes.external_id) {
+    isCve = relationships.weakness?.data.attributes.external_id
+      .toLowerCase()
+      .startsWith('cve-');
+    isCwe = relationships.weakness?.data.attributes.external_id
+      .toLowerCase()
+      .startsWith('cwe-');
+  }
+
   return {
     _class: Entities.REPORT._class,
     _key: `hackerone-report-${report.id}`,
     _type: Entities.REPORT._type,
     id: report.id,
     type: report.type,
-    title: attributes.title,
-    name: attributes.title,
+    name: relationships.weakness?.data.attributes.name || attributes.title,
     category: 'other',
     displayName: attributes.title,
-    details: attributes.vulnerability_information,
+    description:
+      relationships.weakness?.data.attributes.description ||
+      attributes.vulnerability_information,
     state: attributes.state,
     open:
       attributes.state === 'new' ||
@@ -128,6 +171,12 @@ export function createFindingEntity(report: Report): FindingEntity {
     scope: details.scope,
     targets: [target],
     structuredScopeId,
+
+    impact,
+    isCve,
+    isCwe,
+    recommendations: remediation,
+    reference,
     ...details,
   };
 }
@@ -180,7 +229,7 @@ export function createFindingToVulnRelationship(
 export function createWeaknessEntity(
   weakness: Weakness,
 ): WeaknessEntity | AttackEntity | undefined {
-  const attributes = weakness.attributes;
+  const attributes = weakness.data.attributes;
   if (attributes && attributes.external_id) {
     const id = attributes.external_id.toLowerCase();
     if (id.startsWith('cwe-')) {
