@@ -34,7 +34,8 @@
   },
   "dependencies": {
     "@lifeomic/attempt": "^3.0.3",
-    "hackerone-client": "^1.0.7"
+    "hackerone-client": "^1.0.7",
+    "node-fetch": "2"
   },
   "peerDependencies": {
     "@jupiterone/integration-sdk-core": "^8.22.0"
