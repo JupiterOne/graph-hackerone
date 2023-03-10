@@ -29,7 +29,7 @@ export function createProgramAsset(data: HackerOneStructuredScope): Entity {
         maxSeverity: data.attributes.max_severity,
         createdOn: parseTimePropertyValue(data.attributes.created_at),
         updatedOn: parseTimePropertyValue(data.attributes.updated_at),
-        reference: data.attributes.reference,
+        references: data.attributes.reference,
       },
     },
   });
