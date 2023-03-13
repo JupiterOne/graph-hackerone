@@ -37,6 +37,7 @@ export interface FindingEntity extends Entity {
   totalAmountAwarded?: number;
   hackerAlias: string;
   hackerProfilePic?: string;
+  structuredScopeId?: string;
 }
 
 export interface VulnerabilityEntity extends Entity {
@@ -116,13 +117,15 @@ export interface Severity {
 }
 
 export interface Weakness {
-  id: string;
-  type?: string;
-  attributes: {
-    name: string;
-    description: string;
-    external_id?: string;
-    created_at: Date;
+  data: {
+    id: string;
+    type?: string;
+    attributes: {
+      name: string;
+      description: string;
+      external_id: string;
+      created_at: Date;
+    };
   };
 }
 
@@ -152,8 +155,46 @@ export interface Bounty {
 
 export interface StructuredScope {
   data: {
+    id: string;
     attributes: {
       asset_identifier: string;
     };
+  };
+}
+
+export interface HackerOneOrganization {
+  id: string;
+  type: string;
+  attributes: {
+    handle: string;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+export interface HackerOneProgram {
+  id: string;
+  type: string;
+  attributes: {
+    handle: string;
+    policy: string;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+export interface HackerOneStructuredScope {
+  id: string;
+  type: string;
+  attributes: {
+    asset_type: string;
+    asset_identifier: string;
+    eligible_for_bounty: boolean;
+    eligible_for_submission: boolean;
+    instruction: string;
+    max_severity: string;
+    created_at: string;
+    updated_at: string;
+    reference: string;
   };
 }

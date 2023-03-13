@@ -80,18 +80,29 @@ https://github.com/JupiterOne/sdk/blob/main/docs/integrations/development.md
 
 The following entities are created:
 
-| Resources | Entity `_type`      | Entity `_class`         |
-| --------- | ------------------- | ----------------------- |
-| Finding   | `hackerone_report`  | `Finding`               |
-| Service   | `hackerone_program` | `Service`, `Assessment` |
+| Resources     | Entity `_type`            | Entity `_class`         |
+| ------------- | ------------------------- | ----------------------- |
+| Account       | `hackerone_account`       | `Account`               |
+| Assessment    | `hackerone_assessment`    | `Assessment`            |
+| Finding       | `hackerone_report`        | `Finding`               |
+| Organization  | `hackerone_organization`  | `Organization`          |
+| Program Asset | `hackerone_program_asset` | `Entity`                |
+| Service       | `hackerone_program`       | `Service`, `Assessment` |
 
 ### Relationships
 
 The following relationships are created:
 
-| Source Entity `_type` | Relationship `_class` | Target Entity `_type` |
-| --------------------- | --------------------- | --------------------- |
-| `hackerone_program`   | **HAS**               | `hackerone_report`    |
+| Source Entity `_type`     | Relationship `_class` | Target Entity `_type`     |
+| ------------------------- | --------------------- | ------------------------- |
+| `hackerone_account`       | **HAS**               | `hackerone_organization`  |
+| `hackerone_account`       | **HAS**               | `hackerone_program`       |
+| `hackerone_account`       | **HAS**               | `hackerone_program_asset` |
+| `hackerone_organization`  | **HAS**               | `hackerone_program`       |
+| `hackerone_program_asset` | **HAS**               | `hackerone_report`        |
+| `hackerone_program`       | **PERFORMED**         | `hackerone_assessment`    |
+| `hackerone_program`       | **IDENTIFIED**        | `hackerone_report`        |
+| `hackerone_program`       | **SCANS**             | `hackerone_program_asset` |
 
 ### Mapped Relationships
 
