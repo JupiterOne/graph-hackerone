@@ -2,10 +2,13 @@
   "name": "@jupiterone/graph-hackerone",
   "version": "1.0.0",
   "description": "A JupiterOne managed integration for https://www.hackerone.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JupiterOne/graph-hackerone"
+  },
+  "license": "SEE LICENSE IN LICENSE",
   "main": "src/index.js",
   "types": "src/index.d.ts",
-  "repository": "https://github.com/JupiterOne/graph-hackerone",
-  "license": "SEE LICENSE IN LICENSE",
   "files": [
     "src",
     "jupiterone"
